@@ -1,0 +1,19 @@
+TEST MATRIX - PRAKTIKUM PBO PERTEMUAN 6
+Nama: Mhd. Abdi Al-Zikra
+NIM: 2924037
+Tanggal: 13 Oktober 2026
+
+No | Skenario                    | Ekspektasi                           | Hasil
+---|-----------------------------|--------------------------------------|------
+1  | Peserta valid               | Object terbentuk + getInfo benar     | PASS
+2  | Instruktur valid            | Object terbentuk + getInfo benar     | PASS
+3  | ID negatif                  | IllegalArgumentException             | PASS
+4  | Nama kosong                 | IllegalArgumentException             | PASS
+5  | No HP invalid               | IllegalArgumentException             | PASS
+6  | NIM kosong                  | IllegalArgumentException             | PASS
+7  | Prodi kosong                | IllegalArgumentException             | PASS
+8  | Keahlian kosong             | IllegalArgumentException             | PASS
+9  | List berisi 2 subtype       | Dua item diterima tanpa error        | PASS
+10 | Loop getInfo()              | Output sesuai subtype                | PASS
+11 | tampilkanInfo(Orang)        | Bekerja untuk kedua subtype          | PASS
+12 | instanceof pada Instruktur  | Cabang Peserta tidak dijalankan      | PASS

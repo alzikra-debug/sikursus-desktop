@@ -1,0 +1,22 @@
+REFLEKSI PRAKTIKUM PBO PERTEMUAN 6
+Nama: Mhd. Abdi Al-Zikra
+NIM: 2924037
+
+1. Bagian paling saya pahami:
+   Saya paham bahwa dengan membuat field menjadi private dan menggunakan setter, 
+   data menjadi lebih aman karena tidak bisa diubah sembarangan dari luar class. 
+   Setiap perubahan harus melewati validasi terlebih dahulu.
+
+2. Bagian yang sempat membingungkan:
+   Awalnya saya bingung kenapa muncul error merah di file lain setelah mengubah 
+   field jadi private, tapi ternyata itu tanda enkapsulasi berhasil. Saya harus memperbaiki 
+   semua akses langsung menjadi getter/setter
+
+3. Satu bug yang saya temukan & cara memperbaikinya:
+   Error "Could not find or load main class" terjadi karena package declaration 
+   tidak sesuai dengan folder. Saya memperbaikinya dengan menyesuaikan nama package dan 
+   melakukan Clean & Build.
+
+4. Satu alasan saya tidak boleh melakukan casting sembarangan:
+   Karena bisa menyebabkan ClassCastException jika objek aslinya bukan tipe yang 
+   kita tuju. Makanya harus pakai instanceof dulu untuk mengecek tipe objek sebelum casting.

@@ -4,7 +4,8 @@
  * and open the template in the editor.
  */
 package view;
-
+import model.Kursus;
+import javax.swing.JOptionPane;
 /**
  *
  * @author USER
@@ -28,53 +29,46 @@ public class FormPendaftaranAwal extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        txtNama = new javax.swing.JTextField();
+        txtNamaKursus = new javax.swing.JTextField();
         txtBiaya = new javax.swing.JTextField();
-        txtJumlah = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        cmbKursus = new javax.swing.JComboBox<>();
+        cmbLevel = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         btnProses = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtHasil = new javax.swing.JTextArea();
+        txtDiskon = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        txtKodeKursus = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtNamaPendaftar = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Pendaftaran");
+        jLabel1.setText("Form Pendaftaran Kursus");
 
-        txtNama.setText("Nama");
-        txtNama.addActionListener(new java.awt.event.ActionListener() {
+        txtNamaKursus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNamaActionPerformed(evt);
+                txtNamaKursusActionPerformed(evt);
             }
         });
 
-        txtBiaya.setText("Biaya");
         txtBiaya.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtBiayaActionPerformed(evt);
             }
         });
 
-        txtJumlah.setText("jumlah");
-        txtJumlah.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtJumlahActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("Nama Pendaftar");
+        jLabel2.setText("Nama Kursus");
 
         jLabel3.setText("Biaya Kursus");
 
-        jLabel4.setText("Jumlah Peserta");
+        cmbLevel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "BASIC", "INTERMEDIATE", "ADVANCED" }));
 
-        cmbKursus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Java", "Data Science", "UI/UX" }));
-
-        jLabel5.setText("Pilih Kursus");
+        jLabel5.setText("Level");
 
         btnProses.setText("Proses");
         btnProses.addActionListener(new java.awt.event.ActionListener() {
@@ -94,6 +88,18 @@ public class FormPendaftaranAwal extends javax.swing.JFrame {
         txtHasil.setRows(5);
         jScrollPane1.setViewportView(txtHasil);
 
+        txtDiskon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDiskonActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Diskon (&)");
+
+        jLabel4.setText("Kode Kursus");
+
+        jLabel7.setText("Nama Pendaftar");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,109 +109,136 @@ public class FormPendaftaranAwal extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
+                            .addComponent(jLabel6)
                             .addComponent(jLabel3)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel2)
                             .addComponent(jLabel4)
-                            .addComponent(jLabel5))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtJumlah)
-                            .addComponent(txtBiaya)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(jLabel7))
+                        .addGap(34, 34, 34)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtDiskon, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtBiaya, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnProses)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnReset))
-                            .addComponent(cmbKursus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtNama)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                            .addComponent(txtKodeKursus, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbLevel, javax.swing.GroupLayout.Alignment.LEADING, 0, 332, Short.MAX_VALUE)
+                            .addComponent(txtNamaKursus, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNamaPendaftar, javax.swing.GroupLayout.Alignment.LEADING)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(226, 226, 226)
+                        .addGap(170, 170, 170)
                         .addComponent(jLabel1)))
-                .addContainerGap(91, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNamaPendaftar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtBiaya, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtKodeKursus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbKursus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNamaKursus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBiaya, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtDiskon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnProses)
                     .addComponent(btnReset))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnProsesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProsesActionPerformed
-        String nama = txtNama.getText().trim();
-        String kursus = cmbKursus.getSelectedItem().toString();
+        try {
+        // 1. Baca input dari GUI
+        String namaPendaftar = txtNamaPendaftar.getText().trim();
+        String kode = txtKodeKursus.getText().trim();
+        String namaKursus = txtNamaKursus.getText().trim();
+        String level = cmbLevel.getSelectedItem().toString();
+        double biaya = Double.parseDouble(txtBiaya.getText().trim());
+        double diskon = Double.parseDouble(txtDiskon.getText().trim());
 
-        if (nama.isEmpty() || txtBiaya.getText().trim().isEmpty() || txtJumlah.getText().trim().isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Semua inputan harus diisi!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+        // Validasi input kosong
+        if (namaPendaftar.isEmpty() || kode.isEmpty() || namaKursus.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nama, Kode, dan Nama Kursus harus diisi!",
+                "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        try {
-            double biaya = Double.parseDouble(txtBiaya.getText().trim());
-            int jumlah = Integer.parseInt(txtJumlah.getText().trim());
-            double total = hitungTotal(biaya, jumlah);
+        // 2. Buat object Kursus
+        Kursus kursus = new Kursus(kode, namaKursus, level, biaya);
 
-            txtHasil.setText("========== HASIL PENDAFTARAN ==========\n");
-            txtHasil.append("Nama Pendaftar\t: " + nama + "\n");
-            txtHasil.append("Kursus Terpilih\t: " + kursus + "\n");
-            txtHasil.append("Biaya per Kursus\t: Rp " + biaya + "\n");
-            txtHasil.append("Jumlah Peserta\t: " + jumlah + " Orang\n");
-            txtHasil.append("---------------------------------------\n");
-            txtHasil.append("TOTAL BAYAR\t: Rp " + total + "\n");
-            txtHasil.append("=======================================");
-        } catch (NumberFormatException nfe) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Input Biaya atau Jumlah harus berupa angka valid!", "Error Input", javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
+        // 3. Panggil method model
+        double total = kursus.hitungBiayaSetelahDiskon(diskon);
+
+        // 4. Tampilkan hasil
+        String pesan = "=== STRUK PENDAFTARAN ===\n" +
+                       "Nama Pendaftar\t: " + namaPendaftar + "\n" +
+                       "Kode Kursus\t: " + kode + "\n" +
+                       "Nama Kursus\t: " + namaKursus + "\n" +
+                       "Level\t\t: " + level + "\n" +
+                       "Biaya Awal\t: Rp " + String.format("%,.0f", biaya) + "\n" +
+                       "Diskon\t\t: " + diskon + "%\n" +
+                       "---------------------------\n" +
+                       "TOTAL BAYAR\t: Rp " + String.format("%,.0f", total);
+
+        JOptionPane.showMessageDialog(this, pesan);
+        txtHasil.setText(pesan);
+
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Biaya dan Diskon harus berupa angka valid!",
+            "Error Input", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnProsesActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
-        txtNama.setText("");
+        txtNamaPendaftar.setText("");
+        txtKodeKursus.setText("");
+        txtNamaKursus.setText("");
+        cmbLevel.setSelectedIndex(0);
         txtBiaya.setText("");
-        txtJumlah.setText("");
+        txtDiskon.setText("");
         txtHasil.setText("");
-        cmbKursus.setSelectedIndex(0);
+        txtNamaPendaftar.requestFocus();
     }//GEN-LAST:event_btnResetActionPerformed
 
-    private void txtNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNamaActionPerformed
+    private void txtNamaKursusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNamaKursusActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtNamaActionPerformed
-
-    private void txtJumlahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtJumlahActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtJumlahActionPerformed
+    }//GEN-LAST:event_txtNamaKursusActionPerformed
 
     private void txtBiayaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBiayaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBiayaActionPerformed
 
-       private double hitungTotal(double biaya, int jumlah) {
-        return biaya * jumlah;
-    }
+    private void txtDiskonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDiskonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDiskonActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -242,16 +275,20 @@ public class FormPendaftaranAwal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnProses;
     private javax.swing.JButton btnReset;
-    private javax.swing.JComboBox<String> cmbKursus;
+    private javax.swing.JComboBox<String> cmbLevel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField txtBiaya;
+    private javax.swing.JTextField txtDiskon;
     private javax.swing.JTextArea txtHasil;
-    private javax.swing.JTextField txtJumlah;
-    private javax.swing.JTextField txtNama;
+    private javax.swing.JTextField txtKodeKursus;
+    private javax.swing.JTextField txtNamaKursus;
+    private javax.swing.JTextField txtNamaPendaftar;
     // End of variables declaration//GEN-END:variables
 }
