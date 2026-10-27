@@ -1,44 +1,43 @@
 package model;
 
-public class Peserta extends Orang {
-    
-    // 1. Ubah field khusus Peserta menjadi private
+public class Peserta {
+    private int idPeserta;
     private String nim;
+    private String nama;
+    private String jenisKelamin;
     private String prodi;
+    private String noHp;
+    private String email;
 
-    // 2. Constructor: Panggil constructor parent (Orang), lalu pakai setter sendiri
-    public Peserta(int id, String nama, String noHp, String nim, String prodi) {
-        super(id, nama, noHp); // <-- [WAJIB KOMENTAR]: Memanggil constructor parent untuk validasi id, nama, noHp
-        setNim(nim);
-        setProdi(prodi);
+    // Constructor
+    public Peserta(String nim, String nama, String jenisKelamin, String prodi, String noHp, String email) {
+        this.nim = nim;
+        this.nama = nama;
+        this.jenisKelamin = jenisKelamin;
+        this.prodi = prodi;
+        this.noHp = noHp;
+        this.email = email;
     }
 
-    // --- GETTER ---
+    // --- GETTER & SETTER ---
+    public int getIdPeserta() { return idPeserta; }
+    public void setIdPeserta(int idPeserta) { this.idPeserta = idPeserta; }
+    
     public String getNim() { return nim; }
+    public void setNim(String nim) { this.nim = nim; }
+    
+    public String getNama() { return nama; }
+    public void setNama(String nama) { this.nama = nama; }
+    
+    public String getJenisKelamin() { return jenisKelamin; }
+    public void setJenisKelamin(String jenisKelamin) { this.jenisKelamin = jenisKelamin; }
+    
     public String getProdi() { return prodi; }
-
-    // --- SETTER DENGAN VALIDASI ---
+    public void setProdi(String prodi) { this.prodi = prodi; }
     
-    // <-- [KOMENTAR]: Validasi NIM tidak boleh kosong
-    public void setNim(String nim) {
-        if (nim == null || nim.trim().isEmpty()) {
-            throw new IllegalArgumentException("NIM wajib diisi");
-        }
-        this.nim = nim.trim();
-    }
-
-    // <-- [KOMENTAR]: Validasi Prodi tidak boleh kosong
-    public void setProdi(String prodi) {
-        if (prodi == null || prodi.trim().isEmpty()) {
-            throw new IllegalArgumentException("Prodi wajib diisi");
-        }
-        this.prodi = prodi.trim();
-    }
-        // <-- [KOMENTAR]: Override getInfo() untuk menambahkan info khusus Peserta
-    @Override
+    public String getNoHp() { return noHp; }
+    public void setNoHp(String noHp) { this.noHp = noHp; }
     
-    public String getInfo() {
-        // super.getInfo() memanggil method getInfo() milik parent (Orang) agar tidak perlu menulis ulang
-        return "PESERTA | " + super.getInfo() + " | NIM: " + getNim() + " | Prodi: " + getProdi();
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 }
