@@ -4,233 +4,55 @@ import dao.PesertaDAO;
 import model.Peserta;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class FormPeserta extends JFrame {
 
-    private JTextField txtNim, txtNama, txtProdi, txtNoHp, txtEmail;
-    private JRadioButton rbLaki, rbPerempuan;
-    private ButtonGroup buttonGroupJenisKelamin;
-    private JButton btnSimpan, btnHapus, btnReset, btnKeluar;
-
-    private JTable tablePeserta;
-    private DefaultTableModel tableModel;
+    private final PesertaDAO dao = new PesertaDAO();
     private int selectedId = -1;
 
-    // Warna tema
+    private JTextField txtNim, txtNama, txtProdi, txtNoHp, txtEmail, txtCari;
+    private JRadioButton rbLaki, rbPerempuan;
+    private ButtonGroup bgJenisKelamin;
+    private JButton btnSimpan, btnUbah, btnHapus, btnReset, btnKeluar, btnCari;
+    private JTable tblPeserta;
+    private DefaultTableModel tableModel;
+
     private final Color WARNA_HEADER = new Color(26, 82, 118);
-    private final Color WARNA_AKSEN = new Color(46, 134, 193);
+    private final Color WARNA_AKSEN  = new Color(46, 134, 193);
     private final Color WARNA_BORDER = new Color(189, 195, 199);
-    private final Color WARNA_BG_BAWAH = new Color(236, 240, 241);
-    private final Color WARNA_HIJAU = new Color(39, 174, 96);
-    private final Color WARNA_MERAH = new Color(192, 57, 43);
+    private final Color WARNA_BG     = new Color(236, 240, 241);
+    private final Color WARNA_HIJAU  = new Color(39, 174, 96);
+    private final Color WARNA_MERAH  = new Color(192, 57, 43);
     private final Color WARNA_ORANYE = new Color(243, 156, 18);
-    private final Color WARNA_ABU = new Color(127, 140, 141);
-    private final Color WARNA_BIRU_UPDATE = new Color(41, 128, 185);
+    private final Color WARNA_ABU    = new Color(127, 140, 141);
+    private final Color WARNA_UPDATE = new Color(41, 128, 185);
 
     public FormPeserta() {
         initComponents();
-        initTable();
-        refreshTable();
+        configureTable();
+        loadTable();
+        clearForm();
     }
 
-    private void initComponents() {
-        setTitle("FORM DATA PESERTA SIKURSUS");
-        setSize(750, 750);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(10, 10));
-        getContentPane().setBackground(Color.WHITE);
-
-        // ===== PANEL HEADER =====
-        JPanel panelHeader = new JPanel();
-        panelHeader.setBackground(WARNA_HEADER);
-        panelHeader.setPreferredSize(new Dimension(750, 70));
-        panelHeader.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
-
-        JLabel lblJudul = new JLabel("FORM DATA PESERTA SIKURSUS");
-        lblJudul.setForeground(Color.WHITE);
-        lblJudul.setFont(new Font("Tahoma", Font.BOLD, 18));
-        panelHeader.add(lblJudul);
-        add(panelHeader, BorderLayout.NORTH);
-
-        // ===== PANEL INPUT =====
-        JPanel panelInput = new JPanel();
-        panelInput.setBackground(Color.WHITE);
-        panelInput.setLayout(new GridBagLayout());
-        panelInput.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(8, 0, 8, 0);
-
-        Font fontLabel = new Font("Tahoma", Font.PLAIN, 13);
-        Dimension sizeField = new Dimension(280, 32);
-
-        // Baris 1: NIM
-        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.35;
-        panelInput.add(buatLabel("NIM", fontLabel), gbc);
-        gbc.gridx = 1; gbc.weightx = 0.65;
-        txtNim = buatField(sizeField);
-        panelInput.add(txtNim, gbc);
-
-        // Baris 2: Nama
-        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.35;
-        panelInput.add(buatLabel("Nama Lengkap", fontLabel), gbc);
-        gbc.gridx = 1; gbc.weightx = 0.65;
-        txtNama = buatField(sizeField);
-        panelInput.add(txtNama, gbc);
-
-        // Baris 3: Jenis Kelamin
-        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.35;
-        panelInput.add(buatLabel("Jenis Kelamin", fontLabel), gbc);
-        gbc.gridx = 1; gbc.weightx = 0.65;
-        JPanel panelJK = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        panelJK.setBackground(Color.WHITE);
-        rbLaki = new JRadioButton("Laki-laki");
-        rbPerempuan = new JRadioButton("Perempuan");
-        rbLaki.setFont(fontLabel);
-        rbPerempuan.setFont(fontLabel);
-        rbLaki.setBackground(Color.WHITE);
-        rbPerempuan.setBackground(Color.WHITE);
-        buttonGroupJenisKelamin = new ButtonGroup();
-        buttonGroupJenisKelamin.add(rbLaki);
-        buttonGroupJenisKelamin.add(rbPerempuan);
-        panelJK.add(rbLaki);
-        panelJK.add(Box.createHorizontalStrut(20));
-        panelJK.add(rbPerempuan);
-        panelInput.add(panelJK, gbc);
-
-        // Baris 4: Prodi
-        gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.35;
-        panelInput.add(buatLabel("Program Studi", fontLabel), gbc);
-        gbc.gridx = 1; gbc.weightx = 0.65;
-        txtProdi = buatField(sizeField);
-        panelInput.add(txtProdi, gbc);
-
-        // Baris 5: No HP
-        gbc.gridx = 0; gbc.gridy = 4; gbc.weightx = 0.35;
-        panelInput.add(buatLabel("No. HP", fontLabel), gbc);
-        gbc.gridx = 1; gbc.weightx = 0.65;
-        txtNoHp = buatField(sizeField);
-        panelInput.add(txtNoHp, gbc);
-
-        // Baris 6: Email
-        gbc.gridx = 0; gbc.gridy = 5; gbc.weightx = 0.35;
-        panelInput.add(buatLabel("Email", fontLabel), gbc);
-        gbc.gridx = 1; gbc.weightx = 0.65;
-        txtEmail = buatField(sizeField);
-        panelInput.add(txtEmail, gbc);
-
-        // ===== JSplitPane =====
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        splitPane.setTopComponent(panelInput);
-        splitPane.setDividerLocation(320);
-        splitPane.setResizeWeight(0.45);
-
-        JPanel panelTabel = new JPanel(new BorderLayout());
-        panelTabel.setBackground(Color.WHITE);
-        panelTabel.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(WARNA_AKSEN, 2),
-            "DAFTAR PESERTA (Double-click untuk Edit)",
-            0, 0,
-            new Font("Tahoma", Font.BOLD, 13),
-            WARNA_AKSEN
-        ));
-        splitPane.setBottomComponent(panelTabel);
-        add(splitPane, BorderLayout.CENTER);
-
-        // ===== PANEL TOMBOL =====
-        JPanel panelBawah = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 15));
-        panelBawah.setBackground(WARNA_BG_BAWAH);
-        panelBawah.setPreferredSize(new Dimension(750, 80));
-
-        btnSimpan = buatTombol("SIMPAN", WARNA_HIJAU);
-        btnHapus = buatTombol("HAPUS", WARNA_MERAH);
-        btnReset = buatTombol("RESET", WARNA_ORANYE);
-        btnKeluar = buatTombol("KELUAR", WARNA_ABU);
-
-        btnSimpan.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnSimpanActionPerformed();
-            }
-        });
-        btnHapus.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnHapusActionPerformed();
-            }
-        });
-        btnReset.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnResetActionPerformed();
-            }
-        });
-        btnKeluar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnKeluarActionPerformed();
-            }
-        });
-
-        panelBawah.add(btnSimpan);
-        panelBawah.add(btnHapus);
-        panelBawah.add(btnReset);
-        panelBawah.add(btnKeluar);
-        add(panelBawah, BorderLayout.SOUTH);
-    }
-
-    // ===== HELPER METHODS (Level Class - Kompatibel Java 8) =====
-    private JLabel buatLabel(String teks, Font font) {
-        JLabel lbl = new JLabel(teks);
-        lbl.setFont(font);
-        return lbl;
-    }
-
-    private JTextField buatField(Dimension size) {
-        JTextField f = new JTextField();
-        f.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        f.setPreferredSize(size);
-        f.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(WARNA_BORDER, 1),
-            BorderFactory.createEmptyBorder(5, 8, 5, 8)));
-        return f;
-    }
-
-    private JButton buatTombol(String teks, Color warna) {
-        JButton btn = new JButton(teks);
-        btn.setFont(new Font("Tahoma", Font.BOLD, 13));
-        btn.setForeground(Color.WHITE);
-        btn.setBackground(warna);
-        btn.setFocusPainted(false);
-        btn.setBorderPainted(false);
-        btn.setPreferredSize(new Dimension(120, 38));
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        return btn;
-    }
-
-    // ===== INISIALISASI TABEL =====
-    private void initTable() {
-        String[] kolom = {"ID", "NIM", "Nama", "JK", "Prodi", "No HP", "Email"};
-        tableModel = new DefaultTableModel(kolom, 0) {
+    private void configureTable() {
+        tableModel = new DefaultTableModel(
+                new Object[]{"ID", "NIM", "Nama", "JK", "Prodi", "No. HP", "Email"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        tablePeserta = new JTable(tableModel);
-        tablePeserta.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        tablePeserta.setRowHeight(25);
-        tablePeserta.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 12));
-        tablePeserta.getTableHeader().setBackground(WARNA_HEADER);
-        tablePeserta.getTableHeader().setForeground(Color.WHITE);
-        tablePeserta.setSelectionBackground(new Color(174, 214, 241));
-
-        tablePeserta.addMouseListener(new MouseAdapter() {
+        tblPeserta.setModel(tableModel);
+        tblPeserta.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblPeserta.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        tblPeserta.setRowHeight(25);
+        tblPeserta.getTableHeader().setBackground(WARNA_HEADER);
+        tblPeserta.getTableHeader().setForeground(Color.WHITE);
+        tblPeserta.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -238,202 +60,324 @@ public class FormPeserta extends JFrame {
                 }
             }
         });
-
-        JScrollPane scrollPane = new JScrollPane(tablePeserta);
-        JSplitPane splitPane = (JSplitPane) getContentPane().getComponent(1);
-        splitPane.setBottomComponent(scrollPane);
     }
 
-    // ===== LOAD DATA DARI DATABASE =====
-    private void refreshTable() {
-        PesertaDAO dao = new PesertaDAO();
+    private void fillTable(List<Peserta> data) {
+        tableModel.setRowCount(0);
+        for (Peserta p : data) {
+            tableModel.addRow(new Object[]{
+                p.getId(), p.getNim(), p.getNama(), p.getJenisKelamin(),
+                p.getProdi(), p.getNoHp(), p.getEmail()
+            });
+        }
+    }
+
+    private void loadTable() {
         try {
-            List<Peserta> daftar = dao.getAll();
-            tableModel.setRowCount(0);
-            for (Peserta p : daftar) {
-                tableModel.addRow(new Object[]{
-                    p.getIdPeserta(),
-                    p.getNim(),
-                    p.getNama(),
-                    p.getJenisKelamin(),
-                    p.getProdi(),
-                    p.getNoHp(),
-                    p.getEmail()
-                });
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this,
-                "Gagal memuat data:\n" + e.getMessage(),
-                "Database Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+            fillTable(dao.findAll());
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat data: " + ex.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // ===== LOAD BARIS TERPILIH KE FORM =====
+    private void refreshData() {
+        loadTable();
+        clearForm();
+        txtCari.setText("");
+    }
+
     private void loadSelectedRowToForm() {
-        int selectedRow = tablePeserta.getSelectedRow();
-        if (selectedRow == -1) return;
-
-        selectedId = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
-        txtNim.setText(tableModel.getValueAt(selectedRow, 1).toString());
-        txtNama.setText(tableModel.getValueAt(selectedRow, 2).toString());
-
-        String jk = tableModel.getValueAt(selectedRow, 3).toString();
-        if ("L".equals(jk)) {
-            rbLaki.setSelected(true);
-        } else if ("P".equals(jk)) {
-            rbPerempuan.setSelected(true);
+        int row = tblPeserta.getSelectedRow();
+        if (row == -1) {
+            return;
         }
-
-        txtProdi.setText(tableModel.getValueAt(selectedRow, 4).toString());
-        txtNoHp.setText(tableModel.getValueAt(selectedRow, 5).toString());
-        txtEmail.setText(tableModel.getValueAt(selectedRow, 6).toString());
-
-        // Ubah mode jadi UPDATE
-        btnSimpan.setText("UPDATE");
-        btnSimpan.setBackground(WARNA_BIRU_UPDATE);
+        selectedId = Integer.parseInt(tableModel.getValueAt(row, 0).toString());
+        txtNim.setText(tableModel.getValueAt(row, 1).toString());
+        txtNama.setText(tableModel.getValueAt(row, 2).toString());
+        String jk = tableModel.getValueAt(row, 3).toString();
+        rbLaki.setSelected("L".equals(jk));
+        rbPerempuan.setSelected("P".equals(jk));
+        txtProdi.setText(tableModel.getValueAt(row, 4).toString());
+        txtNoHp.setText(tableModel.getValueAt(row, 5).toString());
+        txtEmail.setText(tableModel.getValueAt(row, 6).toString());
+        btnUbah.setEnabled(true);
+        btnHapus.setEnabled(true);
     }
 
-    // ===== CLEAR FORM =====
     private void clearForm() {
+        selectedId = -1;
         txtNim.setText("");
         txtNama.setText("");
-        buttonGroupJenisKelamin.clearSelection();
+        bgJenisKelamin.clearSelection();
         txtProdi.setText("");
         txtNoHp.setText("");
         txtEmail.setText("");
-        selectedId = -1;
-        btnSimpan.setText("SIMPAN");
-        btnSimpan.setBackground(WARNA_HIJAU);
+        tblPeserta.clearSelection();
+        btnUbah.setEnabled(false);
+        btnHapus.setEnabled(false);
         txtNim.requestFocus();
     }
 
-    // ===== EVENT HANDLER: SIMPAN/UPDATE =====
-    private void btnSimpanActionPerformed() {
-        String nim = txtNim.getText().trim();
-        String nama = txtNama.getText().trim();
-        String prodi = txtProdi.getText().trim();
-        String noHp = txtNoHp.getText().trim();
-        String email = txtEmail.getText().trim();
-
-        String jenisKelamin = "";
+    private String getJenisKelamin() {
         if (rbLaki.isSelected()) {
-            jenisKelamin = "L";
-        } else if (rbPerempuan.isSelected()) {
-            jenisKelamin = "P";
+            return "L";
         }
+        if (rbPerempuan.isSelected()) {
+            return "P";
+        }
+        return null;
+    }
 
-        // Validasi wajib
-        if (nim.isEmpty() || nama.isEmpty() || prodi.isEmpty() || jenisKelamin.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "NIM, nama, jenis kelamin, dan prodi wajib diisi.",
-                "Validasi Gagal", JOptionPane.WARNING_MESSAGE);
+    private Peserta getFormData() {
+        Peserta p = new Peserta();
+        p.setId(selectedId);
+        p.setNim(txtNim.getText().trim());
+        p.setNama(txtNama.getText().trim());
+        p.setJenisKelamin(getJenisKelamin());
+        p.setProdi(txtProdi.getText().trim());
+        p.setNoHp(txtNoHp.getText().trim());
+        p.setEmail(txtEmail.getText().trim());
+        return p;
+    }
+
+    private boolean validateForm() {
+        if (txtNim.getText().trim().isEmpty() || txtNama.getText().trim().isEmpty()
+                || txtProdi.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "NIM, Nama, dan Prodi wajib diisi.");
+            return false;
+        }
+        if (getJenisKelamin() == null) {
+            JOptionPane.showMessageDialog(this, "Pilih jenis kelamin.");
+            return false;
+        }
+        return true;
+    }
+
+    private void btnSimpanActionPerformed() {
+        if (!validateForm()) {
             return;
         }
-
-        // Validasi email
-        if (!email.isEmpty() && !email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
-            JOptionPane.showMessageDialog(this,
-                "Format email tidak valid. Contoh: nama@domain.com",
-                "Validasi Gagal", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Validasi no HP
-        if (!noHp.isEmpty() && !noHp.matches("^[0-9+\\-]+$")) {
-            JOptionPane.showMessageDialog(this,
-                "Nomor HP hanya boleh berisi angka, +, atau -.",
-                "Validasi Gagal", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        Peserta peserta = new Peserta(nim, nama, jenisKelamin, prodi, noHp, email);
-        if (selectedId != -1) {
-            peserta.setIdPeserta(selectedId);
-        }
-        PesertaDAO dao = new PesertaDAO();
-
         try {
-            boolean berhasil;
-            if (selectedId != -1) {
-                // Mode UPDATE
-                berhasil = dao.update(peserta);
-                JOptionPane.showMessageDialog(this, "Data peserta berhasil diperbarui.");
-            } else {
-                // Mode INSERT
-                berhasil = dao.insert(peserta);
+            if (dao.insert(getFormData())) {
                 JOptionPane.showMessageDialog(this, "Data peserta berhasil disimpan.");
+                refreshData();
             }
-
-            if (berhasil) {
-                clearForm();
-                refreshTable();
-            } else {
-                JOptionPane.showMessageDialog(this,
-                    "Operasi gagal.", "Informasi", JOptionPane.WARNING_MESSAGE);
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this,
-                "Gagal: " + e.getMessage(),
-                "Database Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Gagal menyimpan: " + ex.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // ===== EVENT HANDLER: HAPUS =====
-    private void btnHapusActionPerformed() {
-        if (selectedId == -1) {
-            JOptionPane.showMessageDialog(this,
-                "Pilih data dari tabel terlebih dahulu untuk dihapus.",
-                "Peringatan", JOptionPane.WARNING_MESSAGE);
+    private void btnUbahActionPerformed() {
+        if (selectedId <= 0) {
+            JOptionPane.showMessageDialog(this, "Pilih data peserta pada tabel terlebih dahulu.");
             return;
         }
-
-        int confirm = JOptionPane.showConfirmDialog(this,
-            "Yakin ingin menghapus data ini?",
-            "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                if (new PesertaDAO().delete(selectedId)) {
-                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus.");
-                    clearForm();
-                    refreshTable();
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                        "Gagal menghapus data.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this,
-                    "Gagal menghapus: " + e.getMessage(),
-                    "Database Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
+        if (!validateForm()) {
+            return;
+        }
+        try {
+            if (dao.update(getFormData())) {
+                JOptionPane.showMessageDialog(this, "Data peserta berhasil diubah.");
+                refreshData();
+            } else {
+                JOptionPane.showMessageDialog(this, "Data tidak ditemukan atau tidak berubah.");
             }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Gagal mengubah: " + ex.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // ===== EVENT HANDLER: RESET =====
+    private void btnHapusActionPerformed() {
+        if (selectedId <= 0) {
+            JOptionPane.showMessageDialog(this, "Pilih data peserta yang akan dihapus.");
+            return;
+        }
+        int jawab = JOptionPane.showConfirmDialog(this,
+                "Yakin menghapus peserta: " + txtNama.getText().trim() + "?",
+                "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (jawab != JOptionPane.YES_OPTION) {
+            return;
+        }
+        try {
+            if (dao.delete(selectedId)) {
+                JOptionPane.showMessageDialog(this, "Data peserta berhasil dihapus.");
+                refreshData();
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Gagal menghapus: " + ex.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void btnResetActionPerformed() {
+        txtCari.setText("");
+        loadTable();
         clearForm();
     }
 
-    // ===== EVENT HANDLER: KELUAR =====
+    private void btnCariActionPerformed() {
+        String keyword = txtCari.getText().trim();
+        try {
+            if (keyword.isEmpty()) {
+                loadTable();
+            } else {
+                fillTable(dao.search(keyword));
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Pencarian gagal: " + ex.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void btnKeluarActionPerformed() {
-        int confirm = JOptionPane.showConfirmDialog(this,
-            "Yakin ingin keluar?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showConfirmDialog(this, "Yakin ingin keluar?", "Konfirmasi",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }
 
-    // ===== MAIN METHOD =====
+    private void initComponents() {
+        setTitle("FORM DATA PESERTA SIKURSUS");
+        setSize(760, 760);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout(10, 10));
+        getContentPane().setBackground(Color.WHITE);
+
+        JPanel header = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 20));
+        header.setBackground(WARNA_HEADER);
+        header.setPreferredSize(new Dimension(760, 70));
+        JLabel judul = new JLabel("FORM DATA PESERTA SIKURSUS");
+        judul.setForeground(Color.WHITE);
+        judul.setFont(new Font("Tahoma", Font.BOLD, 18));
+        header.add(judul);
+        add(header, BorderLayout.NORTH);
+
+        JPanel in = new JPanel(new GridBagLayout());
+        in.setBackground(Color.WHITE);
+        in.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        GridBagConstraints g = new GridBagConstraints();
+        g.fill = GridBagConstraints.HORIZONTAL;
+        g.insets = new Insets(8, 0, 8, 0);
+        Font fl = new Font("Tahoma", Font.PLAIN, 13);
+        Dimension sz = new Dimension(280, 32);
+
+        g.gridx = 0; g.gridy = 0; g.weightx = 0.35; in.add(lbl("NIM", fl), g);
+        g.gridx = 1; g.weightx = 0.65; txtNim = fld(sz); in.add(txtNim, g);
+        g.gridx = 0; g.gridy = 1; g.weightx = 0.35; in.add(lbl("Nama Lengkap", fl), g);
+        g.gridx = 1; g.weightx = 0.65; txtNama = fld(sz); in.add(txtNama, g);
+        g.gridx = 0; g.gridy = 2; g.weightx = 0.35; in.add(lbl("Jenis Kelamin", fl), g);
+        g.gridx = 1; g.weightx = 0.65;
+        JPanel jk = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        jk.setBackground(Color.WHITE);
+        rbLaki = new JRadioButton("Laki-laki");
+        rbPerempuan = new JRadioButton("Perempuan");
+        rbLaki.setFont(fl);
+        rbPerempuan.setFont(fl);
+        rbLaki.setBackground(Color.WHITE);
+        rbPerempuan.setBackground(Color.WHITE);
+        bgJenisKelamin = new ButtonGroup();
+        bgJenisKelamin.add(rbLaki);
+        bgJenisKelamin.add(rbPerempuan);
+        jk.add(rbLaki);
+        jk.add(Box.createHorizontalStrut(20));
+        jk.add(rbPerempuan);
+        in.add(jk, g);
+        g.gridx = 0; g.gridy = 3; g.weightx = 0.35; in.add(lbl("Program Studi", fl), g);
+        g.gridx = 1; g.weightx = 0.65; txtProdi = fld(sz); in.add(txtProdi, g);
+        g.gridx = 0; g.gridy = 4; g.weightx = 0.35; in.add(lbl("No. HP", fl), g);
+        g.gridx = 1; g.weightx = 0.65; txtNoHp = fld(sz); in.add(txtNoHp, g);
+        g.gridx = 0; g.gridy = 5; g.weightx = 0.35; in.add(lbl("Email", fl), g);
+        g.gridx = 1; g.weightx = 0.65; txtEmail = fld(sz); in.add(txtEmail, g);
+
+        JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        sp.setTopComponent(in);
+        sp.setDividerLocation(330);
+        sp.setResizeWeight(0.45);
+
+        JPanel panelTabel = new JPanel(new BorderLayout());
+        panelTabel.setBackground(Color.WHITE);
+        panelTabel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(WARNA_AKSEN, 2),
+                "DAFTAR PESERTA (Double-click untuk Edit)", 0, 0,
+                new Font("Tahoma", Font.BOLD, 13), WARNA_AKSEN));
+
+        JPanel panelCari = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        panelCari.setBackground(Color.WHITE);
+        JLabel lc = new JLabel("Cari Nama / NIM:");
+        lc.setFont(fl);
+        txtCari = fld(new Dimension(220, 32));
+        btnCari = btn("CARI", WARNA_AKSEN);
+        btnCari.setPreferredSize(new Dimension(80, 32));
+        btnCari.addActionListener(e -> btnCariActionPerformed());
+        panelCari.add(lc);
+        panelCari.add(txtCari);
+        panelCari.add(btnCari);
+        panelTabel.add(panelCari, BorderLayout.NORTH);
+
+        tblPeserta = new JTable();
+        panelTabel.add(new JScrollPane(tblPeserta), BorderLayout.CENTER);
+        sp.setBottomComponent(panelTabel);
+        add(sp, BorderLayout.CENTER);
+
+        JPanel bawah = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 15));
+        bawah.setBackground(WARNA_BG);
+        bawah.setPreferredSize(new Dimension(760, 80));
+        btnSimpan = btn("SIMPAN", WARNA_HIJAU);
+        btnUbah   = btn("UBAH",   WARNA_UPDATE);
+        btnHapus  = btn("HAPUS",  WARNA_MERAH);
+        btnReset  = btn("RESET",  WARNA_ORANYE);
+        btnKeluar = btn("KELUAR", WARNA_ABU);
+        btnSimpan.addActionListener(e -> btnSimpanActionPerformed());
+        btnUbah.addActionListener(e -> btnUbahActionPerformed());
+        btnHapus.addActionListener(e -> btnHapusActionPerformed());
+        btnReset.addActionListener(e -> btnResetActionPerformed());
+        btnKeluar.addActionListener(e -> btnKeluarActionPerformed());
+        bawah.add(btnSimpan);
+        bawah.add(btnUbah);
+        bawah.add(btnHapus);
+        bawah.add(btnReset);
+        bawah.add(btnKeluar);
+        add(bawah, BorderLayout.SOUTH);
+    }
+
+    private JLabel lbl(String t, Font f) {
+        JLabel l = new JLabel(t);
+        l.setFont(f);
+        return l;
+    }
+
+    private JTextField fld(Dimension s) {
+        JTextField f = new JTextField();
+        f.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        f.setPreferredSize(s);
+        f.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(WARNA_BORDER, 1),
+                BorderFactory.createEmptyBorder(5, 8, 5, 8)));
+        return f;
+    }
+
+    private JButton btn(String t, Color c) {
+        JButton b = new JButton(t);
+        b.setFont(new Font("Tahoma", Font.BOLD, 13));
+        b.setForeground(Color.WHITE);
+        b.setBackground(c);
+        b.setFocusPainted(false);
+        b.setBorderPainted(false);
+        b.setPreferredSize(new Dimension(120, 38));
+        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return b;
+    }
+
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

@@ -1,42 +1,34 @@
 package model;
 
-public class Peserta {
-    private int idPeserta;
+public class Peserta extends Orang {
     private String nim;
-    private String nama;
     private String jenisKelamin;
     private String prodi;
-    private String noHp;
     private String email;
 
-    // Constructor
+    // 1. CONSTRUCTOR KOSONG (WAJIB ADA agar DAO bisa instantiate)
+    public Peserta() {
+        super(); // Memanggil constructor kosong Orang
+    }
+
+    // 2. CONSTRUCTOR BERPARAMETER (DIPERTAHANKAN agar file Demo lama TIDAK ERROR)
     public Peserta(String nim, String nama, String jenisKelamin, String prodi, String noHp, String email) {
+        super(0, nama, noHp); // Memanggil constructor Orang (id=0 sementara)
         this.nim = nim;
-        this.nama = nama;
         this.jenisKelamin = jenisKelamin;
         this.prodi = prodi;
-        this.noHp = noHp;
         this.email = email;
     }
 
-    // --- GETTER & SETTER ---
-    public int getIdPeserta() { return idPeserta; }
-    public void setIdPeserta(int idPeserta) { this.idPeserta = idPeserta; }
-    
+    // --- GETTER & SETTER KHUSUS PESERTA ---
     public String getNim() { return nim; }
     public void setNim(String nim) { this.nim = nim; }
-    
-    public String getNama() { return nama; }
-    public void setNama(String nama) { this.nama = nama; }
     
     public String getJenisKelamin() { return jenisKelamin; }
     public void setJenisKelamin(String jenisKelamin) { this.jenisKelamin = jenisKelamin; }
     
     public String getProdi() { return prodi; }
     public void setProdi(String prodi) { this.prodi = prodi; }
-    
-    public String getNoHp() { return noHp; }
-    public void setNoHp(String noHp) { this.noHp = noHp; }
     
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

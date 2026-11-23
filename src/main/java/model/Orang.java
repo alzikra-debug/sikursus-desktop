@@ -1,27 +1,27 @@
-package model; // Sesuaikan dengan package model Anda
+package model;
 
 public class Orang {
-    
-    // 1. Ubah field menjadi private (Information Hiding)
     private int id;
     private String nama;
     private String noHp;
 
-    // Constructor: Memanggil setter agar validasi tidak diduplikasi
+    // 1. CONSTRUCTOR KOSONG (WAJIB ADA untuk Praktikum 10 / DAO)
+    public Orang() {
+    }
+
+    // 2. Constructor Berparameter (Untuk kompatibilitas kode lama)
     public Orang(int id, String nama, String noHp) {
         setId(id);
         setNama(nama);
         setNoHp(noHp);
     }
 
-    // --- GETTER (Hanya membuka data yang perlu dibaca) ---
+    // --- GETTER ---
     public int getId() { return id; }
     public String getNama() { return nama; }
     public String getNoHp() { return noHp; }
 
-    // --- SETTER (Gerbang validasi state) ---
-    
-    // <-- [KOMENTAR]: Validasi ID tidak boleh negatif
+    // --- SETTER (dengan validasi) ---
     public void setId(int id) {
         if (id < 0) {
             throw new IllegalArgumentException("ID tidak boleh negatif");
@@ -29,7 +29,6 @@ public class Orang {
         this.id = id;
     }
 
-    // <-- [KOMENTAR]: Validasi nama wajib diisi
     public void setNama(String nama) {
         if (nama == null || nama.trim().isEmpty()) {
             throw new IllegalArgumentException("Nama wajib diisi");
@@ -37,7 +36,6 @@ public class Orang {
         this.nama = nama.trim();
     }
 
-    // <-- [KOMENTAR]: Validasi format No HP menggunakan Regex sederhana
     public void setNoHp(String noHp) {
         String nilai = noHp == null ? "" : noHp.trim();
         if (!nilai.isEmpty() && !nilai.matches("[0-9+\\-]{8,20}")) {
@@ -46,7 +44,6 @@ public class Orang {
         this.noHp = nilai;
     }
 
-    // Method getInfo() dasar (Nanti akan di-override oleh subclass)
     public String getInfo() {
         return getNama() + " | HP:" + (getNoHp().isEmpty() ? "-" : getNoHp());
     }
