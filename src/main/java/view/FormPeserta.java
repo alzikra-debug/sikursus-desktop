@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import report.ReportService; // <--- TAMBAHAN 1: Import ReportService
 
 public class FormPeserta extends JFrame {
 
@@ -17,7 +18,8 @@ public class FormPeserta extends JFrame {
     private JTextField txtNim, txtNama, txtProdi, txtNoHp, txtEmail, txtCari;
     private JRadioButton rbLaki, rbPerempuan;
     private ButtonGroup bgJenisKelamin;
-    private JButton btnSimpan, btnUbah, btnHapus, btnReset, btnKeluar, btnCari;
+    // <--- TAMBAHAN 2: Tambahkan btnCetak di deklarasi variabel
+    private JButton btnSimpan, btnUbah, btnHapus, btnReset, btnKeluar, btnCari, btnCetak;
     private JTable tblPeserta;
     private DefaultTableModel tableModel;
 
@@ -232,6 +234,11 @@ public class FormPeserta extends JFrame {
         }
     }
 
+    // <--- TAMBAHAN 3: Method untuk aksi tombol Cetak
+    private void btnCetakActionPerformed() {
+        ReportService.tampilkanLaporanPeserta();
+    }
+
     private void btnKeluarActionPerformed() {
         if (JOptionPane.showConfirmDialog(this, "Yakin ingin keluar?", "Konfirmasi",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -330,16 +337,21 @@ public class FormPeserta extends JFrame {
         btnUbah   = btn("UBAH",   WARNA_UPDATE);
         btnHapus  = btn("HAPUS",  WARNA_MERAH);
         btnReset  = btn("RESET",  WARNA_ORANYE);
+        btnCetak  = btn("CETAK",  WARNA_HEADER); // <--- TAMBAHAN 4: Buat tombol Cetak
         btnKeluar = btn("KELUAR", WARNA_ABU);
+        
         btnSimpan.addActionListener(e -> btnSimpanActionPerformed());
         btnUbah.addActionListener(e -> btnUbahActionPerformed());
         btnHapus.addActionListener(e -> btnHapusActionPerformed());
         btnReset.addActionListener(e -> btnResetActionPerformed());
+        btnCetak.addActionListener(e -> btnCetakActionPerformed()); // <--- TAMBAHAN 5: Pasang Listener
         btnKeluar.addActionListener(e -> btnKeluarActionPerformed());
+        
         bawah.add(btnSimpan);
         bawah.add(btnUbah);
         bawah.add(btnHapus);
         bawah.add(btnReset);
+        bawah.add(btnCetak); // <--- TAMBAHAN 6: Masukkan ke panel bawah
         bawah.add(btnKeluar);
         add(bawah, BorderLayout.SOUTH);
     }
