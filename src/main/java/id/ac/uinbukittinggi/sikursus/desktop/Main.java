@@ -1,7 +1,15 @@
-package id.ac.uinbukittinggi.sikursus.app;
+package id.ac.uinbukittinggi.sikursus.desktop; 
+
+import javax.swing.SwingUtilities;
+import view.LoginFrame;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("SIKURSUS Desktop siap dikembangkan");
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new LoginFrame().setVisible(true);
+            }
+        });
     }
 }
