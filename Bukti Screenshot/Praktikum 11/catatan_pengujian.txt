@@ -1,0 +1,22 @@
+CATATAN PENGUJIAN PRAKTIKUM 11
+Nama: Mhd. Abdi Al Zikra
+NIM: 2924037
+Tanggal: 23 November 2026
+
+HASIL UJI:
+[T01] Login kosong → pesan wajib diisi ✅
+[T02] Password salah → login gagal ✅
+[T03] Login admin → seluruh menu aktif ✅
+[T04] Login operator → menu Instruktur/Kursus/Kelas nonaktif ✅
+[T05] Klik Peserta 5x → hanya 1 window terbuka ✅
+[T06] Tutup Peserta → Dashboard tetap hidup ✅
+[T07] Buka Peserta lagi → form terbuka normal ✅
+[T08] Menu Instruktur/Kursus/Kelas → placeholder message ✅
+[T09] Logout → kembali ke LoginFrame ✅
+[T10] MySQL mati → pesan error database ✅
+[T12] Tutup Aplikasi → konfirmasi exit ✅
+
+CATATAN:
+- Semua fitur berjalan sesuai rubrik Praktikum 11
+- WindowManager berhasil mencegah duplikasi form
+- Role-based access control berfungsi dengan benar
